@@ -25,8 +25,10 @@ public class WorkerInitializer implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
+        boolean hasAdvertisedListener = true;
+        boolean hasMasterHost = true;
         String dogName;
-        if(args.getOptionValues("dogname")!= null){
+        if(args.getOptionValues("dogname") != null){
             dogName = args.getOptionValues("dogname").get(0);
         }else {
             dogName = InetAddress.getLocalHost().getHostName();
@@ -41,6 +43,13 @@ public class WorkerInitializer implements ApplicationRunner {
         }else {
             log.error("you must specify the advertisedlistener with --advertisedlistener=xxx");
             log.error("note that the listener is used by master, it must be a master reachable address or domain name");
+            hasAdvertisedListener = false;
+        }
+        if(args.getOptionValues("masterHost") == null){
+            log.error("you must specify the masterHost with --masterHost=http://xxx:13399");
+            hasMasterHost = false;
+        }
+        if(!hasAdvertisedListener || !hasMasterHost){
             System.exit(-1);
         }
 

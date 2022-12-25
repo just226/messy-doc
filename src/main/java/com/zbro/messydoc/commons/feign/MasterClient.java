@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-@FeignClient(name = "master", url = "${master.url}",configuration = ClientConfig.class)
+@FeignClient(name = "master", url = "${masterHost}",configuration = ClientConfig.class)
 public interface MasterClient {
 
     @RequestMapping(method = RequestMethod.POST, value = "/api/v1/worker")
