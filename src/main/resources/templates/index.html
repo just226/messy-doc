@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+
+<head>
+    <title>Messy Doc</title>
+    <div th:fragment="head">
+        <meta content="width=device-width, initial-scale=1.0" name="viewport">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <!-- Favicon -->
+        <link href="/favicon.ico" rel="icon">
+        <!-- Icon Font Stylesheet -->
+        <link href="/fontawesome/css/all.min.css" rel="stylesheet">
+        <!-- Customized Bootstrap Stylesheet -->
+        <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+        <style>
+            .google-nav {
+                background: #f2f2f2;
+                color: #70757a;
+                font-size: 15px;
+                padding: 5px 20px;
+                top: 0;
+            }
+            .google-footer {
+                font-family: "Calibri Light";
+                text-align: center;
+                background: #f2f2f2;
+                border-bottom: 1px solid #dadce0;
+                font-size: 15px;
+                color: #70757a;
+                padding: 15px;
+            }
+
+            .search {
+                color: red;
+            }
+        </style>
+    </div>
+</head>
+
+<body>
+
+<!-- Navbar Start -->
+<div class="sticky-top">
+    <nav th:fragment="navbar" class="navbar navbar-expand-lg google-nav">
+        <div class="container-fluid">
+            <a href="/index" class="navbar-brand" style="font-family:'Brush Script Std'">MessyDoc</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/workerList">WorkerList</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div id="navbar-search-box" style="display: none;">
+                <form action="/find" method="get">
+                    <div class="input-group">
+                        <input class="form-control" name="key" type="text">
+                        <button class="btn btn-outline-secondary" type="submit">Search</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+
+<!-- Navbar End -->
+
+
+    <!-- Content Start -->
+    <div style="min-height: calc(100vh - 50px - 53.5px) ">
+
+
+        <div class="pt-4 px-4">
+            <div class="row justify-content-md-center text-center pb-3 pt-5">
+                <h1>Messy Doc</h1>
+                <span class="blockquote-footer">A File Search Engine</span>
+            </div>
+            <form action="/find" method="get">
+
+                <div class="row justify-content-md-center">
+                    <div class="col-md-auto">
+                        <div class="input-group p-3 search-box" style="width:calc(60vw)">
+                            <input class="form-control" name="key" type="text"/>
+                            <button class="btn btn-outline-secondary" type="submit">
+                                Search
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
+        <div class="container-fluid pt-2" th:if="${NameList.size > 0}">
+            <h3 class="display-6 p-5">KeyWord in Title</h3>
+            <div class="p-5 pb-1 pt-1" th:each="item:${NameList}">
+                <p th:text="${item}"></p>
+            </div>
+        </div>
+
+        <div class="container-fluid pt-2" th:if="${ContentList.size > 0}">
+            <h3 class="display-6 p-5">KeyWord in Content</h3>
+            <div class="p-5 pb-1 pt-1" th:each="item:${ContentList}">
+                <a th:href="@{'/content/' + ${item.getId}(key=${highLightKey})}" th:text="${item.getFilePath}"></a>
+                <p th:text="${item.getFileContent}"></p>
+            </div>
+
+        </div>
+
+        <!-- Back to Top -->
+        <!--        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="fa fa-angles-up"></i></a>-->
+    </div>
+    <!-- Content End -->
+
+
+
+<!-- Footer Start -->
+<div th:fragment="footer">
+    <div class="google-footer mt-auto">
+        &copy; <a>ZzzBro Ice Queen</a>, All Right Reserved.
+    </div>
+</div>
+<!-- Footer End -->
+
+
+</body>
+
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/jquery-3.4.1.min.js"></script>
+<script>
+    function find(searchVal) {
+        let html = document.getElementsByTagName("body")[0];
+        var reg1 = /<script[^>]*>(.|\n)*<\/script>/gi;
+        let htmlText = html.innerHTML.replace(reg1, "");
+        let re = new RegExp(searchVal, "ig");
+        html.innerHTML = htmlText.replace(re, `<span class="search">${searchVal}</span>`);
+    }
+    find("[[${highLightKey}]]");
+
+    window.addEventListener("scroll", () => {
+        if(window.scrollY > 250){
+            $("#navbar-search-box").show();
+        }else {
+            $("#navbar-search-box").hide();
+        }
+    });
+
+
+</script>
+
+</html>

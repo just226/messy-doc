@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document Content</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<style>
+    .google-nav {
+        background: #f2f2f2;
+        color: #70757a;
+        font-family: "Brush Script Std";
+        font-size: 15px;
+        padding: 5px 20px;
+        top: 0;
+    }
+
+    .google-footer {
+        font-family: "Calibri Light";
+        text-align: center;
+        background: #f2f2f2;
+        border-bottom: 1px solid #dadce0;
+        font-size: 15px;
+        color: #70757a;
+        padding: 15px;
+    }
+
+    .search {
+        color: red;
+    }
+</style>
+<body>
+
+<!-- Navbar Start -->
+    <nav class="sticky-top navbar navbar-expand-lg google-nav">
+        <div class="container-fluid">
+            <a href="/index" class="navbar-brand">MessyDoc</a>
+            <div id="navbar-search-box" style="font-family:'' ">
+                <form action="/find" method="get">
+                    <div class="input-group">
+                        <input class="form-control" name="key" type="text">
+                        <button class="btn btn-primary" type="submit">Search</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+<!-- Navbar End -->
+
+<div style="min-height: calc(100vh - 50px - 53.5px) " class="px-5 pt-3">
+        <p class="h1" th:text="${item.getFileName}" ></p>
+    <p class="blockquote" th:text="${item.getFilePath}" ></p>
+
+    <p  class="lead shadow p-5" style="white-space: pre-wrap;" th:text="${item.getFileContent}" ></p>
+</div>
+
+<!-- Footer Start -->
+<div th:fragment="footer">
+    <div class="google-footer mt-auto">
+        &copy; <a>ZzzBro Ice Queen</a>, All Right Reserved.
+    </div>
+</div>
+<!-- Footer End -->
+
+</body>
+
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/jquery-3.4.1.min.js"></script>
+
+<script>
+    function find(searchVal) {
+        let html = document.getElementsByTagName("body")[0];
+        var reg1 = /<script[^>]*>(.|\n)*<\/script>/gi;
+        let htmlText = html.innerHTML.replace(reg1, "");
+        let re = new RegExp(searchVal, "ig");
+        html.innerHTML = htmlText.replace(re, `<span class="search">${searchVal}</span>`);
+    }
+    find("[[${highLightKey}]]");
+</script>
+</html>

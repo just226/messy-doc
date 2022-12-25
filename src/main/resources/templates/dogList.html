@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dog List</title>
+    <div th:insert="index::head" />
+
+</head>
+<body>
+<div class="sticky-top">
+    <nav th:insert="index::navbar"/>
+</div>
+<div class="p-5">
+
+<h3>Dog List</h3>
+    <div th:each="task:${taskList}">
+        <ul>
+            <li th:text="'DogName: ' + ${task[0]}" ></li>
+            <li th:text="'SniffPath: ' + ${task[1]}" ></li>
+            <li th:text="'TaskDelay: ' + ${task[2]} +' seconds'" ></li>
+            <span class="blockquote-footer">positive value is delays of next task,negative is sniffing in progress</span>
+            <li>
+                <a th:href="@{/stop(id=${id},taskName=${task[0]})}">STOP</a>
+            </li>
+        </ul>
+        <br>
+    </div>
+</div>
+
+</body>
+</html>

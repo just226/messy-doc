@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Worker List</title>
+    <div th:insert="index::head" />
+</head>
+<body>
+<div class="sticky-top">
+    <nav th:insert="index::navbar"/>
+</div>
+<div class="p-5">
+
+<h3>Worker List</h3>
+    <div th:each="worker:${workerList}">
+        <br>
+        <p th:text="'WorkerName: ' + ${worker.name}" ></p>
+        <ul>
+            <li th:text="'WorkerId: ' + ${worker.id}" ></li>
+            <li th:text="'WorkerHost: ' + ${worker.advertisedListener}" ></li>
+            <li th:text="'WorkerStatus: ' + ${worker.status}" ></li>
+            <li th:text="'WorkerTTL: ' + ${worker.ttl}" ></li>
+        </ul>
+
+        <br>
+
+        <ul>
+            <li th:text="'SniffingPaths: ' + ${#strings.toString(worker.path)}"></li>
+            <li>
+            <form action="/addPath" method="post">
+            <div class="input-group mb-3 w-25">
+                <input name="id" th:value="${worker.id}" style="display: none">
+                <input type="text" name="path" class="form-control" placeholder="path">
+                <button class="btn btn-outline-secondary" type="submit">AddSniffingPath</button>
+            </div>
+            </form>
+            </li>
+            <li th:if="${worker.path.size > 0}" >
+                <div th:each="path:${worker.path}">
+                    <form action="/removePath" method="post">
+                        <input name="id" th:value="${worker.id}" style="display: none">
+                        <input name="path" th:value="${path}" style="display: none">
+                        <button class="btn btn-sm btn-outline-secondary" th:text="'remove ' + ${path}" type="submit"></button>
+                    </form>
+                </div>
+            </li>
+            <li>
+            <form action="/start" method="get">
+                <div class="input-group mb-3 w-25">
+                    <input name="id" th:value="${worker.id}" style="display: none">
+                    <input type="text" name="task" class="form-control" placeholder="task" value="yellowDog">
+                    <button class="btn btn-outline-secondary" type="submit">LetTheDogOut</button>
+                </div>
+            </form>
+            </li>
+            <a th:href="@{/dogList(id=${worker.id})}">Dog List</a>
+        </ul>
+        <br>
+    </div>
+</div>
+
+</body>
+<script src="/js/bootstrap.bundle.min.js"></script>
+<script>
+
+    function postPath(){
+        var action_src = "/api/v1/worker/" + document.getElementById("post-path-id").value + "/path";
+        var form = document.getElementById('post-path-form');
+        form.action = action_src;
+    }
+
+
+</script>
+
+</html>
