@@ -2,6 +2,7 @@ package com.zbro.messydoc.master.controller;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch.indices.AnalyzeRequest;
+import com.zbro.messydoc.commons.document.DocumentEntity;
 import com.zbro.messydoc.commons.document.DocumentEntityOldVer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,10 +73,10 @@ public class MessyDocController {
         long t = System.currentTimeMillis();
 
         //todo switch the entity
-        List<DocumentEntityOldVer> fileContentList = new LinkedList<>();
-        List<DocumentEntityOldVer> fileNameList = new LinkedList<>();
-        operations.search(queryFileContent,DocumentEntityOldVer.class).forEach(e->fileContentList.add(e.getContent()));
-        operations.search(queryFileName,DocumentEntityOldVer.class).forEach(e->fileNameList.add(e.getContent()));
+        List<DocumentEntity> fileContentList = new LinkedList<>();
+        List<DocumentEntity> fileNameList = new LinkedList<>();
+        operations.search(queryFileContent,DocumentEntity.class).forEach(e->fileContentList.add(e.getContent()));
+        operations.search(queryFileName,DocumentEntity.class).forEach(e->fileNameList.add(e.getContent()));
 
         log.info("query spend {} ms", System.currentTimeMillis() - t);
 
@@ -96,7 +97,7 @@ public class MessyDocController {
                 })
                 .collect(Collectors.toList()));
 
-        model.addAttribute("NameList",fileNameList.stream().map(DocumentEntityOldVer::getFilePath).collect(Collectors.toList()));
+        model.addAttribute("NameList",fileNameList.stream().map(DocumentEntity::getFilePath).collect(Collectors.toList()));
         model.addAttribute("highLightKey", highLightKeys.get(0));
 
         return "index";
@@ -106,7 +107,7 @@ public class MessyDocController {
     public String getContent(@RequestParam Optional<String> key, @PathVariable("id") String id, Model model) {
 
         //todo switch the entity
-        model.addAttribute("item", operations.get(id,DocumentEntityOldVer.class));
+        model.addAttribute("item", operations.get(id,DocumentEntity.class));
         model.addAttribute("highLightKey",key.isPresent() ? key.get(): "place holder 占位符");
 
         return "contentPage";
