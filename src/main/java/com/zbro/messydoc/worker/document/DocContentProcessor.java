@@ -81,11 +81,27 @@ public class DocContentProcessor {
                         if(e.getFileType() == DocTypeEnum.EXCEL){
                             // excel file process
                             if (e.getSize() < maxSize){
-                                documentEntity.setFileContent(parsers.get(e.getFileType()).read(e.getFilePath().get(0)));
+                                documentEntity.setFileContent(parsers.get(e.getFileType()).read(e.getFilePath().get(0))
+                                        .replaceAll("[\r|\n|\r\n]{2,}","\n")
+                                        .replaceAll("[ |\t]{2,}"," ")
+                                        .replaceAll("[ \r| \n| \r\n]{2,}", " \n")
+                                        .replaceAll("[\t\r|\t\n|\t\r\n]{2,}", " \n")
+                                );
                             }else  documentEntity.setFileContent("Ignore large excel file");
                         }else{
                             // un-excel file process
-                            documentEntity.setFileContent(parsers.get(e.getFileType()).read(e.getFilePath().get(0)));
+                            documentEntity.setFileContent(
+                                    parsers
+                                            .get(e.getFileType())
+                                            .read(e.getFilePath().get(0))
+                                            .replaceAll("[\r|\n|\r\n]{2,}","\n")
+                                            .replaceAll("[ |\t]{2,}"," ")
+                                            .replaceAll("[ \r| \n| \r\n]{2,}", " \n")
+                                            .replaceAll("[\t\r|\t\n|\t\r\n]{2,}", " \n")
+
+                            );
+
+
                         }
                     }
                     documentEntity.setFileHash(e.getFileHash());
