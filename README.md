@@ -84,4 +84,4 @@ Messy-doc is at: http://yourhost:13399/index
 
 I suppose Messy-doc could be use in small team, provide valuable words at hand. It is an master/worker app, you could distribute different kinds of work throughout your devices.
 
-Feel free to show your new ideas about it or anything else.
+Expecting your new ideas about it or anything else.
