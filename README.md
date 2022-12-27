@@ -2,7 +2,7 @@
 A distributed master/worker multi-thread full-text document content search app
 
 ## Description
-I always get overwhelmed by the massives bunch of documents in my computer, no matter how hard I try to organize them, they still stay in a heap of mess.
+I always get overwhelmed by a massive bunch of documents in my computer, no matter how hard I try to organize them, they still stay in a heap of mess.
 
 Messy-doc helps me to find the right things I want.
 
