@@ -2,7 +2,7 @@
 A distributed master/worker multi-thread full-text document content search app
 
 ## Description
-I always get overwhelmed by a bunch of document in my computer, no matter how hard I try to organize them, they still stay in a heap of mess.
+I always get overwhelmed by the massives bunch of documents in my computer, no matter how hard I try to organize them, they still stay in a heap of mess.
 
 Messy-doc helps me to find the right things I want.
 
@@ -64,4 +64,24 @@ elastic.host=192.168.240.134
 
 Messy-doc is at: http://yourhost:13399/index
 
-## Contact
+## Todo
+
+1. Here's the begining of this App, a lot of things need to do like 
+
+2. The jar is really fat and need to lose some weight, maybe decoupling the master and worker will help, but the dependent jars have the most blame and I don't know how to deal with them.
+
+3. Files in archive like zip or rar need to be process
+
+4. There should have some security considerations, like the conversation between master and worker, the security of ES etc..
+
+5. A comprehensive API need to be adapted, and socket have less overhead then web API
+
+6. To process the files more efficiently by leveraging the map
+
+7. Frontend
+
+## Misc
+
+I suppose Messy-doc could be use in small team, provide valuable words at hand. It is an master/worker app, you could distribute different kinds of work throughout your devices.
+
+Feel free to show your new ideas about it or anything else.
