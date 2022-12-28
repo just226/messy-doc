@@ -66,7 +66,7 @@ Messy-doc is at: http://yourhost:13399/index
 
 ## Todo
 
-1. Here's the begining of this App, a lot of things need to do like 
+1. Here's the begining of this App, a lot of things need to do 
 
 2. The jar is really fat and need to lose some weight, maybe decoupling the master and worker will help, but the dependent jars have the most blame and I don't know how to deal with them.
 
@@ -84,4 +84,4 @@ Messy-doc is at: http://yourhost:13399/index
 
 I suppose Messy-doc could be use in small team, provide valuable words at hand. It is an master/worker app, you could distribute different kinds of work throughout your devices.
 
- Expecting your new ideas about it or anything else.
+Expecting your new ideas about it or anything else.
