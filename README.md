@@ -66,7 +66,7 @@ Messy-doc is at: http://yourhost:13399/index
 
 ## Todo
 
-1. Here's the begining of this App, a lot of things need to do like 
+1. Here's the begining of this App, a lot of things need to do 
 
 2. The jar is really fat and need to lose some weight, maybe decoupling the master and worker will help, but the dependent jars have the most blame and I don't know how to deal with them.
 
