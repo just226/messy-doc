@@ -1,5 +1,6 @@
 package com.zbro.messydoc.worker.document;
 
+import com.zbro.messydoc.commons.document.NewDocumentEntity;
 import com.zbro.messydoc.worker.WorkerEntitySingleton;
 import com.zbro.messydoc.commons.document.DocTypeEnum;
 import com.zbro.messydoc.commons.document.DocumentEntity;
@@ -109,6 +110,53 @@ public class DocContentProcessor {
                     documentEntity.setFilePath(e.getFilePath());
                     documentEntity.setVersion(e.getVersion());
                     documentEntity.setNeedUpdateContent(false);
+                    documentEntity.setHostName(e.getHostName());
+                    elasticsearchTemplate.save(documentEntity);
+                });
+    }
+
+    public void readFileContentAndSaveToEs(Map<String, NewDocumentEntity> files){
+        files.values().stream()
+                .filter(NewDocumentEntity::isNeedUpdateContent)
+                .forEach(e->{
+                    e.setNeedUpdateContent(false);
+                    NewDocumentEntity documentEntity = new NewDocumentEntity();
+                    // parse the file which type parser has been registered by fileParserRegister
+                    if(parsers.get(e.getFileType()) != null){
+                        log.debug("retrieve {} content", e.getFileName());
+                        if(e.getFileType() == DocTypeEnum.EXCEL){
+                            // excel file process
+                            if (e.getSize() < maxSize){
+                                String c = "";
+                                for(String p:e.getFilePath()){
+                                   if(!(c = parsers.get(e.getFileType()).read(p)).equals("null")) break;
+                                }
+                                documentEntity.setFileContent(c
+                                        .replaceAll("[\r|\n|\r\n]{2,}","\n")
+                                        .replaceAll("[ |\t]{2,}"," ")
+                                        .replaceAll("[ \r| \n| \r\n]{2,}", " \n")
+                                        .replaceAll("[\t\r|\t\n|\t\r\n]{2,}", " \n")
+                                );
+                            }else  documentEntity.setFileContent("Ignore large excel file");
+                        }else{
+                            // un-excel file process
+                            String c = "";
+                            for(String p:e.getFilePath()){
+                                if(!(c = parsers.get(e.getFileType()).read(p)).equals("null")) break;
+                            }
+                            documentEntity.setFileContent(c
+                                    .replaceAll("[\r|\n|\r\n]{2,}","\n")
+                                    .replaceAll("[ |\t]{2,}"," ")
+                                    .replaceAll("[ \r| \n| \r\n]{2,}", " \n")
+                                    .replaceAll("[\t\r|\t\n|\t\r\n]{2,}", " \n")
+                            );
+
+
+                        }
+                    }
+                    documentEntity.setFileName(e.getFileName());
+                    documentEntity.setFilePath(e.getFilePath());
+                    documentEntity.setVersion(e.getVersion());
                     documentEntity.setHostName(e.getHostName());
                     elasticsearchTemplate.save(documentEntity);
                 });
