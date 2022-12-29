@@ -22,7 +22,6 @@ services:
     environment: 
       - discovery.type=single-node
       - xpack.security.enabled=false
-      - xpack.security.http.ssl.enabled=false
 ```
 
 Test the es:
