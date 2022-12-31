@@ -60,7 +60,7 @@ public class FileDataStorage {
 
     /**
      *
-     * @param path the path of the file stored
+     * @param path the path where the documents-collection scanned, used to make a dbfile identification
      * @param object the object stored
      * @param pathsOfDoc the paths of the document scanned
      * @return the path of the file stored

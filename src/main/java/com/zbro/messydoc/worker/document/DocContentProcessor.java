@@ -23,7 +23,6 @@ public class DocContentProcessor {
     WorkerEntitySingleton workerProfile;
     @Autowired
     ElasticsearchTemplate elasticsearchTemplate;
-
     /**
      * Doesn't read the file with size exceeding 6M ,consider it not a valuable document.
      */
@@ -35,7 +34,6 @@ public class DocContentProcessor {
     public void fileParserRegister(FileContentReader parser){
         this.parsers.put(parser.getType(),parser);
         this.fileTypeSet.add(parser.getType());
-
     }
 
     public Set<DocumentEntity> initFileContent(Set<DocumentEntity> files){
@@ -101,8 +99,6 @@ public class DocContentProcessor {
                                             .replaceAll("[\t\r|\t\n|\t\r\n]{2,}", " \n")
 
                             );
-
-
                         }
                     }
                     documentEntity.setFileHash(e.getFileHash());
@@ -116,6 +112,10 @@ public class DocContentProcessor {
     }
 
     public void readFileContentAndSaveToEs(Map<String, NewDocumentEntity> files){
+        log.info("{} files need to be sniffed",files.values()
+                .stream()
+                .filter(NewDocumentEntity::isNeedUpdateContent)
+                .count());
         files.values().stream()
                 .filter(NewDocumentEntity::isNeedUpdateContent)
                 .forEach(e->{
@@ -150,8 +150,6 @@ public class DocContentProcessor {
                                     .replaceAll("[ \r| \n| \r\n]{2,}", " \n")
                                     .replaceAll("[\t\r|\t\n|\t\r\n]{2,}", " \n")
                             );
-
-
                         }
                     }
                     documentEntity.setFileName(e.getFileName());
@@ -162,15 +160,11 @@ public class DocContentProcessor {
                 });
     }
 
-
     public Set<DocumentEntity> updateFileContent(Set<DocumentEntity> files){
         files.stream()
                 .filter(DocumentEntity::isNeedUpdateContent)
                 .forEach(e->e.setFileContent(parsers.get(e.getFileType()).read((String)e.getFilePath().get(0))));
         return files;
     }
-
-
-
 
 }

@@ -29,8 +29,11 @@ public class WorkerRestController {
     @Autowired
     WorkerEntitySingleton workerProfile;
 
+//    @Autowired
+//    DogTask dogTask;
+
     @Autowired
-    DogTask dogTask;
+    NewDogTask newDogTask;
 
     @Autowired
     ApplicationEventPublisher eventPublisher;
@@ -45,12 +48,11 @@ public class WorkerRestController {
                 dogTaskRecords.get(dogName).task.cancel(true);
                 dogTaskRecords.remove(dogName);
 //                taskScheduler.getScheduledThreadPoolExecutor().getQueue().remove(dogTaskHolder.get(dogName));
-
             }
-            dogTask.setPath(workerProfile.getPath());
+            newDogTask.setPath(workerProfile.getPath());
             dogTaskRecords.put(dogName, new DogTaskRecord(dogName,
                     Arrays.toString(workerProfile.getPath().toArray(new String[0])),
-                    taskScheduler.scheduleAtFixedRate(dogTask, Duration.ofMillis(1 * 60 * 30000))));
+                    taskScheduler.scheduleAtFixedRate(newDogTask, Duration.ofMillis(1 * 60 * 30000))));
 
             workerProfile.setPath(new HashSet<String>());
 

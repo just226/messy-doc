@@ -2,8 +2,7 @@ package com.zbro.messydoc.master.controller;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch.indices.AnalyzeRequest;
-import com.zbro.messydoc.commons.document.DocumentEntity;
-import com.zbro.messydoc.commons.document.DocumentEntityOldVer;
+import com.zbro.messydoc.commons.document.NewDocumentEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
@@ -32,13 +31,11 @@ public class MessyDocController {
     @Autowired
     ElasticsearchClient elasticsearchClient;
 
-
     @GetMapping("index")
     public String getIndex(Model model) {
         model.addAttribute("highLightKey", "place holder 占位符");
         model.addAttribute("NameList",new ArrayList<>());
         model.addAttribute("ContentList",new ArrayList<>());
-
         return "index";
     }
 
@@ -50,7 +47,6 @@ public class MessyDocController {
             model.addAttribute("ContentList",new ArrayList<>());
             return "index";
         }
-
         List<String> highLightKeys = new LinkedList<>();
 
         elasticsearchClient
@@ -62,22 +58,19 @@ public class MessyDocController {
                 }))
                 .tokens().forEach(e->highLightKeys.add(e.token()));
 
-
         NativeQuery queryFileContent = NativeQuery.builder()
                 .withQuery(q->q.match(m->m.field("fileContent").query(key))).withMaxResults(20)
                 .build();
         NativeQuery queryFileName = NativeQuery.builder()
                 .withQuery(q->q.matchPhrase(v->v.field("fileName").query(key))).withMaxResults(20)
                 .build();
-
         long t = System.currentTimeMillis();
 
         //todo switch the entity
-        List<DocumentEntity> fileContentList = new LinkedList<>();
-        List<DocumentEntity> fileNameList = new LinkedList<>();
-        operations.search(queryFileContent,DocumentEntity.class).forEach(e->fileContentList.add(e.getContent()));
-        operations.search(queryFileName,DocumentEntity.class).forEach(e->fileNameList.add(e.getContent()));
-
+        List<NewDocumentEntity> fileContentList = new LinkedList<>();
+        List<NewDocumentEntity> fileNameList = new LinkedList<>();
+        operations.search(queryFileContent,NewDocumentEntity.class).forEach(e->fileContentList.add(e.getContent()));
+        operations.search(queryFileName,NewDocumentEntity.class).forEach(e->fileNameList.add(e.getContent()));
         log.info("query spend {} ms", System.currentTimeMillis() - t);
 
 //        Pattern p = Pattern.compile(".{20,100}");
@@ -97,19 +90,16 @@ public class MessyDocController {
                 })
                 .collect(Collectors.toList()));
 
-        model.addAttribute("NameList",fileNameList.stream().map(DocumentEntity::getFilePath).collect(Collectors.toList()));
+        model.addAttribute("NameList",fileNameList.stream().map(NewDocumentEntity::getFilePath).collect(Collectors.toList()));
         model.addAttribute("highLightKey", highLightKeys.get(0));
-
         return "index";
     }
 
     @GetMapping("content/{id}")
     public String getContent(@RequestParam Optional<String> key, @PathVariable("id") String id, Model model) {
-
         //todo switch the entity
-        model.addAttribute("item", operations.get(id,DocumentEntity.class));
+        model.addAttribute("item", operations.get(id,NewDocumentEntity.class));
         model.addAttribute("highLightKey",key.isPresent() ? key.get(): "place holder 占位符");
-
         return "contentPage";
     }
 

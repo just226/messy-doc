@@ -59,17 +59,21 @@ The only thing you need to modify is es host, leave the others untouched unless 
 ```
 elastic.host=192.168.240.134
 ```
-3. build and run, explore and enjoy
+3. compile and run, explore and enjoy
+
+```
+mvn spring-boot:run
+```
 
 Messy-doc is at: http://yourhost:13399/index
 
 ## Todo
 
-1. Here's the begining of this App, a lot of things need to do 
+1. Here's the beginning of this App, a lot of things need to do 
 
-2. The jar is really fat and need to lose some weight, maybe decoupling the master and worker will help, but the dependent jars have the most blame and I don't know how to deal with them.
+2. The jar is really fat and need to slim down, decoupling the master and worker may help, and the dependents are the most to blame, and I don't know how to deal with them though.
 
-3. Files in archive like zip or rar need to be process
+3. Files in archive like zip or rar need to be process.
 
 4. There should have some security considerations, like the conversation between master and worker, the security of ES etc..
 
@@ -81,6 +85,10 @@ Messy-doc is at: http://yourhost:13399/index
 
 ## Misc
 
-I suppose Messy-doc could be use in small team, provide valuable words at hand. It is an master/worker app, you could distribute different kinds of work throughout your devices.
+I suppose Messy-doc could do a lot of things. 
+
+If you have a small team, it will sniff all the team files and provide valuable words at hand. 
+
+For a master/worker app, you could distribute different kinds of work throughout your devices.
 
 Expecting your new ideas about it or anything else.
