@@ -27,11 +27,8 @@ public class CSVFileContentReader implements FileContentReader {
     public String read(String path) {
         Charset cs = CharSetDetector.detect(path);
         if (cs != null) {
-            try {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(path), cs));
-                String s = Arrays.toString(reader.lines().limit(maxLine).toArray(String[]::new));
-                reader.close();
-                return s;
+            try(BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(path), cs))) {
+                return Arrays.toString(reader.lines().limit(maxLine).toArray(String[]::new));
             } catch (Exception e) {
                 e.printStackTrace();
                 return "null";

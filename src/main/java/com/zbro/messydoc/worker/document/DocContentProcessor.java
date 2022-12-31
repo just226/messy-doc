@@ -1,5 +1,8 @@
 package com.zbro.messydoc.worker.document;
 
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch.core.IndexRequest;
+import co.elastic.clients.elasticsearch.core.UpdateByQueryRequest;
 import com.zbro.messydoc.commons.document.NewDocumentEntity;
 import com.zbro.messydoc.worker.WorkerEntitySingleton;
 import com.zbro.messydoc.commons.document.DocTypeEnum;
@@ -8,6 +11,9 @@ import com.zbro.messydoc.worker.reader.FileContentReader;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.core.document.Document;
+import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
+import org.springframework.data.elasticsearch.core.query.UpdateQuery;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -23,6 +29,9 @@ public class DocContentProcessor {
     WorkerEntitySingleton workerProfile;
     @Autowired
     ElasticsearchTemplate elasticsearchTemplate;
+
+    @Autowired
+    ElasticsearchClient elasticsearchClient;
     /**
      * Doesn't read the file with size exceeding 6M ,consider it not a valuable document.
      */
@@ -116,20 +125,32 @@ public class DocContentProcessor {
                 .stream()
                 .filter(NewDocumentEntity::isNeedUpdateContent)
                 .count());
-        files.values().stream()
-                .filter(NewDocumentEntity::isNeedUpdateContent)
-                .forEach(e->{
-                    e.setNeedUpdateContent(false);
-                    NewDocumentEntity documentEntity = new NewDocumentEntity();
-                    // parse the file which type parser has been registered by fileParserRegister
-                    if(parsers.get(e.getFileType()) != null){
-                        log.debug("retrieve {} content", e.getFileName());
-                        if(e.getFileType() == DocTypeEnum.EXCEL){
-                            // excel file process
-                            if (e.getSize() < maxSize){
+        files.values().forEach(e->{
+                    if(e.isNeedUpdateContent()){
+                        e.setNeedUpdateContent(false);
+                        NewDocumentEntity documentEntity = new NewDocumentEntity();
+                        // parse the file which type parser has been registered by fileParserRegister
+                        if(parsers.get(e.getFileType()) != null){
+                            log.debug("retrieve {} content", e.getFileName());
+                            if(e.getFileType() == DocTypeEnum.EXCEL){
+                                // excel file process
+                                if (e.getSize() < maxSize){
+                                    String c = "";
+                                    for(String p:e.getFilePath()){
+                                        if(!(c = parsers.get(e.getFileType()).read(p)).equals("null")) break;
+                                    }
+                                    documentEntity.setFileContent(c
+                                            .replaceAll("[\r|\n|\r\n]{2,}","\n")
+                                            .replaceAll("[ |\t]{2,}"," ")
+                                            .replaceAll("[ \r| \n| \r\n]{2,}", " \n")
+                                            .replaceAll("[\t\r|\t\n|\t\r\n]{2,}", " \n")
+                                    );
+                                }else  documentEntity.setFileContent("Ignore large excel file");
+                            }else{
+                                // un-excel file process
                                 String c = "";
                                 for(String p:e.getFilePath()){
-                                   if(!(c = parsers.get(e.getFileType()).read(p)).equals("null")) break;
+                                    if(!(c = parsers.get(e.getFileType()).read(p)).equals("null")) break;
                                 }
                                 documentEntity.setFileContent(c
                                         .replaceAll("[\r|\n|\r\n]{2,}","\n")
@@ -137,26 +158,24 @@ public class DocContentProcessor {
                                         .replaceAll("[ \r| \n| \r\n]{2,}", " \n")
                                         .replaceAll("[\t\r|\t\n|\t\r\n]{2,}", " \n")
                                 );
-                            }else  documentEntity.setFileContent("Ignore large excel file");
-                        }else{
-                            // un-excel file process
-                            String c = "";
-                            for(String p:e.getFilePath()){
-                                if(!(c = parsers.get(e.getFileType()).read(p)).equals("null")) break;
                             }
-                            documentEntity.setFileContent(c
-                                    .replaceAll("[\r|\n|\r\n]{2,}","\n")
-                                    .replaceAll("[ |\t]{2,}"," ")
-                                    .replaceAll("[ \r| \n| \r\n]{2,}", " \n")
-                                    .replaceAll("[\t\r|\t\n|\t\r\n]{2,}", " \n")
-                            );
+                            documentEntity.setFileName(e.getFileName());
+                            documentEntity.setFilePath(e.getFilePath());
+                            documentEntity.setVersion(e.getVersion());
+                            documentEntity.setHostName(e.getHostName());
+                            log.debug("(1)ready to save {}",e.getFileName());
+                            elasticsearchTemplate.save(documentEntity);
+                        }else{
+                            //todo do the update, can't use save
+                            log.debug("(2)ready to save {}",e.getFileName());
+//                            Document document = Document.from(new HashMap<String,Set<String>>(){{put("filePath",e.getFilePath());}});
+//                            UpdateQuery updateQuery = UpdateQuery.builder(e.getId()).build();
+//                            elasticsearchTemplate.update(updateQuery,IndexCoordinates.of("new-messy-doc"));
                         }
+
+                    }else{
+                        log.debug("(3)ready to save {}",e.getFileName());
                     }
-                    documentEntity.setFileName(e.getFileName());
-                    documentEntity.setFilePath(e.getFilePath());
-                    documentEntity.setVersion(e.getVersion());
-                    documentEntity.setHostName(e.getHostName());
-                    elasticsearchTemplate.save(documentEntity);
                 });
     }
 

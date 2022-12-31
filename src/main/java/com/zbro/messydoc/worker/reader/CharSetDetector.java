@@ -23,13 +23,11 @@ public class CharSetDetector {
 
             for(String cs:charset){
                 CharsetDecoder charsetDecoder = Charset.forName(cs).newDecoder();
-                try{
-                BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(filePath),charsetDecoder));
-                reader.readLine();
-                reader.close();
-                return Charset.forName(cs);
-            }catch (MalformedInputException e){
-
+                try(BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(filePath),charsetDecoder))) {
+                    reader.readLine();
+                    return Charset.forName(cs);
+                }catch (MalformedInputException e){
+                // do nothing, continue to try next charset.
                 }
         }
 

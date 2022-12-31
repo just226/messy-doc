@@ -20,8 +20,8 @@ public class NewFileScaner {
 
     private boolean scan0(Map<String, NewDocumentEntity> documents, File[] filePaths){
 
-        //invalid the old path;
-        documents.values().forEach(e->e.setFilePath(new HashSet<>()));
+        //invalid the version;
+        documents.values().forEach(e->e.setVersion(0));
 
         for (File path : filePaths) {
             long startTime = System.currentTimeMillis();
@@ -50,7 +50,6 @@ public class NewFileScaner {
                                 HashSet<String> paths = new HashSet<>();
                                 paths.add(file.toString());
                                 documentEntity.setFilePath(paths);
-                                documentEntity.setFileHash(hash);
                                 return documentEntity;
                             }else {
                                 v.getFilePath().add(file.toString());
@@ -85,7 +84,7 @@ public class NewFileScaner {
         for(String path:stringPaths){
             if(new File(path).isDirectory()){
                 paths.add(new File(path));
-            }else log.info("{} is not a directory");
+            }else log.info("{} is not a directory",path);
         }
         if(!paths.isEmpty()){
             return scan0(oldDocuments, paths.toArray(new File[0]));
@@ -97,7 +96,7 @@ public class NewFileScaner {
         for(String path:stringPaths){
             if(new File(path).isDirectory()){
                 paths.add(new File(path));
-            }else log.info("{} is not a directory");
+            }else log.info("{} is not a directory",path);
         }
         if(!paths.isEmpty()){
             return scan0(new HashMap<>(), paths.toArray(new File[0]));

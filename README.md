@@ -32,6 +32,8 @@ curl http://youres:9200
 
 Yes! There is no authentication or ssl, it will save us a lot of time. But it is not a good idea to run naked in open field or your production enviroment, take good care of your privacy.
 
+update. 
+
 Then, install the ik-analyzer. 
 
 ```
