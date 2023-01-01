@@ -30,29 +30,33 @@ public class NewFileScaner {
                     @Override
                     public FileVisitResult visitFile(Path file, BasicFileAttributes attrs){
                         DocTypeEnum type = DocTypeDetector.getTypeFromExtensionName(file);
-                        String hash = type!=DocTypeEnum.unknown ? MD5Hash.digest(file) : "";
                         String fileName = file.getFileName().toString();
-                        String key = fileName+hash;
+                        String hash = type != DocTypeEnum.unknown ? MD5Hash.digest(file) : MD5Hash.digest(fileName);
 
                         //1.the version, filescan will touch every files, un-updated version indicates the file is not exist;
                         //2.the key, files with different name but same content have different key, they all will be persist;
                         //3.the key, unknown type files are considered as common assets, those have same name will be aggregated to 1 entry;
 
                         //double brace map initiation makes trouble, the element apply the type of the outer-class
-                        documents.compute(key,(k,v)->{
+                        documents.compute(hash,(k,v)->{
                             if(v == null){
                                 NewDocumentEntity documentEntity = new NewDocumentEntity();
+                                documentEntity.setId(hash);
                                 documentEntity.setFileName(fileName);
                                 documentEntity.setFileType(type);
                                 documentEntity.setSize(attrs.size());
                                 documentEntity.setVersion(startTime);
                                 documentEntity.setNeedUpdateContent(true);
+                                documentEntity.setNeedUpdatePath(false);
+                                documentEntity.setNeedSetDelete(false);
                                 HashSet<String> paths = new HashSet<>();
                                 paths.add(file.toString());
                                 documentEntity.setFilePath(paths);
                                 return documentEntity;
                             }else {
-                                v.getFilePath().add(file.toString());
+                                if(v.getFilePath().add(file.toString())){
+                                    v.setNeedUpdatePath(true);
+                                };
                                 v.setVersion(startTime);
                                 return v;
                             }

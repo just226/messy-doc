@@ -13,10 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -98,7 +95,10 @@ public class MessyDocController {
     @GetMapping("content/{id}")
     public String getContent(@RequestParam Optional<String> key, @PathVariable("id") String id, Model model) {
         //todo switch the entity
-        model.addAttribute("item", operations.get(id,NewDocumentEntity.class));
+
+        NewDocumentEntity d = operations.get(id,NewDocumentEntity.class);
+        model.addAttribute("item", d);
+        model.addAttribute("ver", d.getVersion() != 0 ? new Date(d.getVersion()) : "the file has been deleted");
         model.addAttribute("highLightKey",key.isPresent() ? key.get(): "place holder 占位符");
         return "contentPage";
     }

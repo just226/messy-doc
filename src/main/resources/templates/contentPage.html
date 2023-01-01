@@ -52,8 +52,11 @@
 <!-- Navbar End -->
 
 <div style="min-height: calc(100vh - 50px - 53.5px) " class="px-5 pt-3">
-        <p class="h1" th:text="${item.getFileName}" ></p>
-    <p class="blockquote" th:text="${item.getFilePath}" ></p>
+
+    <div th:each="path:${item.getFilePath}">
+        <p  class="blockquote" th:text="${path}" ></p>
+    </div>
+    <p th:text="'File Version: ' + ${ver}"></p>
 
     <p  class="lead shadow p-5" style="white-space: pre-wrap;" th:text="${item.getFileContent}" ></p>
 </div>

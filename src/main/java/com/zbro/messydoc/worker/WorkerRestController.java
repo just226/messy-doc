@@ -52,7 +52,7 @@ public class WorkerRestController {
             newDogTask.setPath(workerProfile.getPath());
             dogTaskRecords.put(dogName, new DogTaskRecord(dogName,
                     Arrays.toString(workerProfile.getPath().toArray(new String[0])),
-                    taskScheduler.scheduleAtFixedRate(newDogTask, Duration.ofMillis(1 * 60 * 30000))));
+                    taskScheduler.scheduleAtFixedRate(newDogTask, Duration.ofMillis(24 * 60 * 60 * 1000))));
 
             workerProfile.setPath(new HashSet<String>());
 

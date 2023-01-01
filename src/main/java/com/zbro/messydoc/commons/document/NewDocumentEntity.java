@@ -32,5 +32,9 @@ public class NewDocumentEntity implements Serializable {
     @Transient
     private boolean needUpdateContent;
     @Transient
+    private boolean needUpdatePath;
+    @Transient
+    private boolean needSetDelete;
+    @Transient
     private long size;
 }

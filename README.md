@@ -32,7 +32,7 @@ curl http://youres:9200
 
 Yes! There is no authentication or ssl, it will save us a lot of time. But it is not a good idea to run naked in open field or your production enviroment, take good care of your privacy.
 
-update. 
+Update: Ok, I have tweaked some authentication and ssl settings of the ES, you could remove the configuration at com.zbro.messydoc.commons.elastic.EsConfig for an easy access.
 
 Then, install the ik-analyzer. 
 
@@ -77,7 +77,7 @@ Messy-doc is at: http://yourhost:13399/index
 
 3. Files in archive like zip or rar need to be process.
 
-4. There should have some security considerations, like the conversation between master and worker, the security of ES etc..
+4. There should have some security considerations, like the conversation between master and worker, the security of ES and Portal etc..
 
 5. A comprehensive API need to be adapted, and socket have less overhead then web API
 

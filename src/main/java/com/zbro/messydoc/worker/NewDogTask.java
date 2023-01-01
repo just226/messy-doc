@@ -85,6 +85,12 @@ public class NewDogTask implements Runnable {
             docContentProcessor.readFileContentAndSaveToEs(files);
             log.info("sniff content and persist to db cost: {}ms", System.currentTimeMillis() - t3);
 
+            docContentProcessor.updatePathToEs(files);
+
+            docContentProcessor.updateInvalidFilesToEs(files);
+
+            docContentProcessor.removeInvalidFilesFromMap(files);
+
             //3. save new files to path
             String dbFile = fileDataStorage.saveToDbFile(files,path);
             log.info("save db file to {}",dbFile);
