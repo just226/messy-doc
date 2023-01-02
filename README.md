@@ -52,7 +52,7 @@ GET _analyze
 If your document are in English like language, you may not need ik, and Modify the Entity in 
 
 ```
-com.zbro.messydoc.commons.document.DocumentEntity.java
+com.zbro.messydoc.commons.document.NewDocumentEntity.java
 ```
 
 2. this is a spring-boot app, check the properties in the application.properties
@@ -71,19 +71,19 @@ Messy-doc is at: http://yourhost:13399/index
 
 ## Todo
 
-1. Here's the beginning of this App, a lot of things need to do 
+1. Here's the beginning of this App, a lot of things need to do: 
 
-2. The jar is really fat and need to slim down, decoupling the master and worker may help, and the dependents are the most to blame, and I don't know how to deal with them though.
+2. The jar is really fat and need to slim down, decoupling the master and worker may help, but the dependents are the most to blame, and I don't know how to deal with them.
 
-3. Files in archive like zip or rar need to be process.
+3. Files in archive like zip or rar need to be processed.
 
 4. There should have some security considerations, like the conversation between master and worker, the security of ES and Portal etc..
 
-5. A comprehensive API need to be adapted, and socket have less overhead then web API
+5. A comprehensive API need to be adapted, and socket have less overhead then web API.
 
-6. To process the files more efficiently by leveraging the map
+6. To process the files more efficiently and deal with all kinds of file conditions like to identify the same files with different name etc...
 
-7. Frontend
+7. Frontend...
 
 ## Misc
 
