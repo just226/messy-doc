@@ -57,7 +57,7 @@ com.zbro.messydoc.commons.document.NewDocumentEntity.java
 
 2. this is a spring-boot app, check the properties in the application.properties
 
-The only thing you need to modify is es host, leave the others untouched unless you know what are they used for.
+The only thing you need to modify is es configuration, leave the others untouched unless you know what are they used for.
 ```
 elastic.host=192.168.240.134
 ```

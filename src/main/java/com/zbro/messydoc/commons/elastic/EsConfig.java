@@ -30,16 +30,29 @@ public class EsConfig {
     @Value(value = "${elastic.host}")
     private String esHost;
 
+    @Value(value = "${elastic.port}")
+    private int esPort;
+
+    @Value(value = "${elastic.username}")
+    private String esUsername;
+
+    @Value(value = "${elastic.password}")
+    private String esPassword;
+
+    @Value(value = "${elastic.caPath}")
+    private String caPath;
+
+
 
     @Bean
     RestClient restClient() throws Exception{
 
         BasicCredentialsProvider credsProv = new BasicCredentialsProvider();
         credsProv.setCredentials(
-                AuthScope.ANY, new UsernamePasswordCredentials("elastic", "abcd1234")
+                AuthScope.ANY, new UsernamePasswordCredentials(esUsername, esPassword)
         );
 
-            File certFile = new File("ca.crt");
+            File certFile = new File(caPath);
 
             SSLContext sslContext = TransportUtils
                     .sslContextFromHttpCaCrt(certFile);
@@ -49,7 +62,7 @@ public class EsConfig {
 //                .sslContextFromCaFingerprint(fingerPrint);
 
         return RestClient.builder(
-                new HttpHost(esHost, 9200,"https"))
+                new HttpHost(esHost, esPort,"https"))
                 .setHttpClientConfigCallback(hc -> hc
                         .setSSLContext(sslContext)
                         .setDefaultCredentialsProvider(credsProv)
