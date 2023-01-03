@@ -171,7 +171,7 @@ public class DocContentProcessor {
     }
 
     public void updatePathToEs(Map<String, NewDocumentEntity> files){
-        log.info("{} files need to be update path",files.values()
+        log.info("{} files need to be update path from es",files.values()
                 .stream()
                 .filter(NewDocumentEntity::isNeedUpdatePath)
                 .count());
@@ -184,7 +184,7 @@ public class DocContentProcessor {
             }
 
     public void updateInvalidFilesToEs(Map<String, NewDocumentEntity> files){
-        log.info("{} files need to be invalided",files.values()
+        log.info("{} files need to be invalided from es",files.values()
                 .stream()
                 .filter(e -> e.getVersion() == 0)
                 .count());

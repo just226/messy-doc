@@ -20,9 +20,6 @@ public class NewFileScaner {
 
     private boolean scan0(Map<String, NewDocumentEntity> documents, File[] filePaths){
 
-        //invalid the version;
-        documents.values().forEach(e->e.setVersion(0));
-
         for (File path : filePaths) {
             long startTime = System.currentTimeMillis();
             try {
@@ -34,7 +31,7 @@ public class NewFileScaner {
                         String hash = type != DocTypeEnum.unknown ? MD5Hash.digest(file) : MD5Hash.digest(fileName);
 
                         //1.the version, filescan will touch every files, un-updated version indicates the file is not exist;
-                        //2.the key, files with different name but same content have different key, they all will be persist;
+                        //2.the key, known type files with different name but same content have same key, some filename may be missed;
                         //3.the key, unknown type files are considered as common assets, those have same name will be aggregated to 1 entry;
 
                         //double brace map initiation makes trouble, the element apply the type of the outer-class

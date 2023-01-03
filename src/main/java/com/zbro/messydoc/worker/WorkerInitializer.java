@@ -59,7 +59,7 @@ public class WorkerInitializer implements ApplicationRunner {
         workerProfile.setAdvertisedListener(advertisedlistener);
         workerProfile.setStatus("idle");
         workerProfile.setTtl(10);
-        workerProfile.setPath(new HashSet<>());
+        workerProfile.setPaths(new HashSet<>());
         eventPublisher.publishEvent(new MessyDocEvent("regist"));
 
 

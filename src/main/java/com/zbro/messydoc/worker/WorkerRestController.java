@@ -29,11 +29,8 @@ public class WorkerRestController {
     @Autowired
     WorkerEntitySingleton workerProfile;
 
-//    @Autowired
-//    DogTask dogTask;
-
     @Autowired
-    NewDogTask newDogTask;
+    DeltaDogTask deltaDogTask;
 
     @Autowired
     ApplicationEventPublisher eventPublisher;
@@ -42,19 +39,19 @@ public class WorkerRestController {
     public String startADogTask(@RequestBody String dogName){
 
         //check if the path is not empty
-        if(!workerProfile.getPath().isEmpty()){
+        if(!workerProfile.getPaths().isEmpty()){
             log.debug("Dog {} start to work",dogName);
             if(dogTaskRecords.containsKey(dogName)){
                 dogTaskRecords.get(dogName).task.cancel(true);
                 dogTaskRecords.remove(dogName);
 //                taskScheduler.getScheduledThreadPoolExecutor().getQueue().remove(dogTaskHolder.get(dogName));
             }
-            newDogTask.setPath(workerProfile.getPath());
+            deltaDogTask.setPaths(workerProfile.getPaths());
             dogTaskRecords.put(dogName, new DogTaskRecord(dogName,
-                    Arrays.toString(workerProfile.getPath().toArray(new String[0])),
-                    taskScheduler.scheduleAtFixedRate(newDogTask, Duration.ofMillis(24 * 60 * 60 * 1000))));
+                    Arrays.toString(workerProfile.getPaths().toArray(new String[0])),
+                    taskScheduler.scheduleAtFixedRate(deltaDogTask, Duration.ofMillis(24 * 60 * 60 * 1000))));
 
-            workerProfile.setPath(new HashSet<String>());
+            workerProfile.setPaths(new HashSet<String>());
 
             return "success";
         }else {
@@ -118,7 +115,7 @@ public class WorkerRestController {
             path =  path.toLowerCase();
         }
         if(new File(path).isDirectory()){
-            workerProfile.getPath().add(path);
+            workerProfile.getPaths().add(path);
             eventPublisher.publishEvent(new MessyDocEvent("update"));
         }else return false;
         return true;
@@ -136,7 +133,7 @@ public class WorkerRestController {
             path =  path.toLowerCase();
         }
         if(new File(path).isDirectory()){
-            workerProfile.getPath().remove(path);
+            workerProfile.getPaths().remove(path);
             eventPublisher.publishEvent(new MessyDocEvent("update"));
         }else return false;
         return true;

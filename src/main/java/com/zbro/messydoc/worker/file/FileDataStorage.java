@@ -36,8 +36,8 @@ public class FileDataStorage {
         Object set = null;
         long startTime = System.currentTimeMillis();
         if( Files.exists(Paths.get(paths))) {
-            try{
-                set = (new ObjectInputStream(new FileInputStream(paths))).readObject();
+            try(ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(paths))){
+                set = inputStream.readObject();
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -63,7 +63,7 @@ public class FileDataStorage {
      * @param path the path where the documents-collection scanned, used to make a dbfile identification
      * @param object the object stored
      * @param pathsOfDoc the paths of the document scanned
-     * @return the path of the file stored
+     * @return the path of the files belonged
      */
     public String saveToDbFile(String path, Object object, String ...pathsOfDoc){
         if(Files.isDirectory(Paths.get(path))){
@@ -74,16 +74,12 @@ public class FileDataStorage {
             String pathHash = MD5Hash.digest(Arrays.toString(sortedPath.toArray(new String[0])));
             path = Paths.get(path).resolve("fileDb" + "-" + pathHash).toString();
         }else {
-            path = Paths.get(path).resolve("fileDb" + "-" + MD5Hash.digest(path)).toString();
+            path = Paths.get(path).resolve("fileDb" + "-" + System.currentTimeMillis()).toString();
         }
-        try{
-            FileOutputStream fileOutputStream
-                    = new FileOutputStream(path);
-            ObjectOutputStream objectOutputStream
-                    = new ObjectOutputStream(fileOutputStream);
+        try(ObjectOutputStream objectOutputStream
+                    = new ObjectOutputStream(new FileOutputStream(path))){
             objectOutputStream.writeObject(object);
             objectOutputStream.flush();
-            objectOutputStream.close();
         }catch (Exception e){
             e.printStackTrace();
         }

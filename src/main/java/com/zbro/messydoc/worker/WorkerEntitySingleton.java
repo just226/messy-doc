@@ -16,7 +16,7 @@ public class WorkerEntitySingleton {
     private String id;
     private String name;
     private String advertisedListener;
-    private Set<String> path;
+    private Set<String> paths;
     private String status;
     private int ttl;
 

@@ -19,7 +19,7 @@ import java.util.*;
 
 @Component
 @Slf4j
-public class NewDogTask implements Runnable {
+public class BetaDogTask implements Runnable {
 
     private DocContentProcessor docContentProcessor;
     private WorkerEntitySingleton workerProfile;
@@ -33,8 +33,8 @@ public class NewDogTask implements Runnable {
     @Autowired
     ApplicationEventPublisher eventPublisher;
 
-    public NewDogTask(@Autowired DocContentProcessor docContentProcessor,
-                      @Autowired WorkerEntitySingleton workerProfile){
+    public BetaDogTask(@Autowired DocContentProcessor docContentProcessor,
+                       @Autowired WorkerEntitySingleton workerProfile){
         this.docContentProcessor = docContentProcessor;
         this.workerProfile = workerProfile;
     }
@@ -74,6 +74,8 @@ public class NewDogTask implements Runnable {
                 log.error(e.toString());
             }
             long t1 = System.currentTimeMillis();
+            //invalid the version
+            files.values().forEach(e->e.setVersion(0));
             //2. scan the path, initiate the new files
             scaner.scan(files,path);
             log.info("scan path {} complete, {} files found, cost: {}ms",path,files.size(),System.currentTimeMillis() - t1);
@@ -89,6 +91,7 @@ public class NewDogTask implements Runnable {
 
             docContentProcessor.updateInvalidFilesToEs(files);
 
+            //delete if version == 0
             docContentProcessor.removeInvalidFilesFromMap(files);
 
             //3. save new files to path

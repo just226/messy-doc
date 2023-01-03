@@ -20,7 +20,7 @@ import java.util.Set;
 
 @Component
 @Slf4j
-public class DogTask implements Runnable {
+public class AlPhaDogTask implements Runnable {
 
     private DocContentProcessor docContentProcessor;
     private WorkerEntitySingleton workerProfile;
@@ -34,8 +34,8 @@ public class DogTask implements Runnable {
     @Autowired
     ApplicationEventPublisher eventPublisher;
 
-    public DogTask(@Autowired DocContentProcessor docContentProcessor,
-                   @Autowired WorkerEntitySingleton workerProfile){
+    public AlPhaDogTask(@Autowired DocContentProcessor docContentProcessor,
+                        @Autowired WorkerEntitySingleton workerProfile){
         this.docContentProcessor = docContentProcessor;
         this.workerProfile = workerProfile;
     }

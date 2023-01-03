@@ -26,7 +26,7 @@
         <br>
 
         <ul>
-            <li th:text="'SniffingPaths: ' + ${#strings.toString(worker.path)}"></li>
+            <li th:text="'SniffingPaths: ' + ${#strings.toString(worker.paths)}"></li>
             <li>
             <form action="/addPath" method="post">
             <div class="input-group mb-3 w-25">
@@ -36,8 +36,8 @@
             </div>
             </form>
             </li>
-            <li th:if="${worker.path.size > 0}" >
-                <div th:each="path:${worker.path}">
+            <li th:if="${worker.paths.size > 0}" >
+                <div th:each="path:${worker.paths}">
                     <form action="/removePath" method="post">
                         <input name="id" th:value="${worker.id}" style="display: none">
                         <input name="path" th:value="${path}" style="display: none">
