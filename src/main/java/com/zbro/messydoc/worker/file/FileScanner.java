@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 @Slf4j
-public class FileScaner {
+public class FileScanner {
 
     private Set<FileRawEntity> scan0(File[] filePaths){
         Set<FileRawEntity> finalSet = new HashSet<>();

@@ -16,7 +16,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 
 @Slf4j
-public class NewFileScaner {
+public class NewFileScanner {
 
     private boolean scan0(Map<String, NewDocumentEntity> documents, File[] filePaths){
 

@@ -46,7 +46,7 @@ public class WorkerRestController {
                 dogTaskRecords.remove(dogName);
 //                taskScheduler.getScheduledThreadPoolExecutor().getQueue().remove(dogTaskHolder.get(dogName));
             }
-            deltaDogTask.setPaths(workerProfile.getPaths());
+            deltaDogTask.setSniffPaths(workerProfile.getPaths());
             dogTaskRecords.put(dogName, new DogTaskRecord(dogName,
                     Arrays.toString(workerProfile.getPaths().toArray(new String[0])),
                     taskScheduler.scheduleAtFixedRate(deltaDogTask, Duration.ofMillis(24 * 60 * 60 * 1000))));
@@ -80,6 +80,18 @@ public class WorkerRestController {
             }
             return true;
         }else return false;
+
+    }
+
+    //todo startDogTaskOnce
+    @PostMapping("worker/startOnce")
+    public boolean startDogTaskOnce(@RequestBody String dogName)
+    {
+        if(!dogTaskRecords.isEmpty()){
+            log.debug("Dog {} cancel work",dogName);
+
+            }
+            return true;
 
     }
 

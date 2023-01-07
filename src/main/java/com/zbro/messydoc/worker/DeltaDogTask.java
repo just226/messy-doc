@@ -4,10 +4,8 @@ package com.zbro.messydoc.worker;
 import com.zbro.messydoc.commons.document.NewDocumentEntity;
 import com.zbro.messydoc.commons.event.MessyDocEvent;
 import com.zbro.messydoc.worker.document.DocContentProcessor;
-import com.zbro.messydoc.worker.document.DocumentProcessor;
 import com.zbro.messydoc.worker.file.FileDataStorage;
-import com.zbro.messydoc.worker.file.FileSetInspector;
-import com.zbro.messydoc.worker.file.NewFileScaner;
+import com.zbro.messydoc.worker.file.NewFileScanner;
 import com.zbro.messydoc.worker.reader.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,20 +25,21 @@ public class DeltaDogTask implements Runnable {
 
     private DocContentProcessor docContentProcessor;
     private WorkerEntitySingleton workerProfile;
+    private ApplicationEventPublisher eventPublisher;
 
-    private Set<String> paths;
+    private Set<String> sniffPaths;
 
-    public void setPaths(Set<String> paths) {
-        this.paths = paths;
+    public void setSniffPaths(Set<String> sniffPaths) {
+        this.sniffPaths = sniffPaths;
     }
 
     @Autowired
-    ApplicationEventPublisher eventPublisher;
-
-    public DeltaDogTask(@Autowired DocContentProcessor docContentProcessor,
-                        @Autowired WorkerEntitySingleton workerProfile) {
+    public DeltaDogTask(DocContentProcessor docContentProcessor,
+                        WorkerEntitySingleton workerProfile,
+                        ApplicationEventPublisher eventPublisher) {
         this.docContentProcessor = docContentProcessor;
         this.workerProfile = workerProfile;
+        this.eventPublisher = eventPublisher;
     }
 
     @Override
@@ -48,10 +47,8 @@ public class DeltaDogTask implements Runnable {
         workerProfile.setStatus("working");
         eventPublisher.publishEvent(new MessyDocEvent("update"));
 
-        NewFileScaner scaner = new NewFileScaner();
+        NewFileScanner scanner = new NewFileScanner();
         FileDataStorage fileDataStorage = new FileDataStorage();
-        DocumentProcessor aggregator = new DocumentProcessor();
-        FileSetInspector inspector = new FileSetInspector();
 
         docContentProcessor.fileParserRegister(new ExcelFileContentReader());
         docContentProcessor.fileParserRegister(new CSVFileContentReader());
@@ -80,11 +77,11 @@ public class DeltaDogTask implements Runnable {
         allFiles.values().forEach(e-> e.setVersion(0));
 
         //2. scan the paths, initiate the new files
-        for (String path : paths.toArray(new String[0])) {
+        for (String path : sniffPaths.toArray(new String[0])) {
 
             long t1 = System.currentTimeMillis();
 
-            scaner.scan(allFiles, path);
+            scanner.scan(allFiles, path);
             log.info("scan path {} complete, {} files found, cost: {}ms", path, allFiles.size(), System.currentTimeMillis() - t1);
 
         }

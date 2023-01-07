@@ -1,7 +1,6 @@
 package com.zbro.messydoc.worker;
 
 
-import com.zbro.messydoc.commons.document.DocumentEntity;
 import com.zbro.messydoc.commons.document.NewDocumentEntity;
 import com.zbro.messydoc.commons.event.MessyDocEvent;
 import com.zbro.messydoc.worker.document.DocContentProcessor;
@@ -44,7 +43,7 @@ public class BetaDogTask implements Runnable {
         workerProfile.setStatus("working");
         eventPublisher.publishEvent(new MessyDocEvent("update"));
 
-        NewFileScaner scaner = new NewFileScaner();
+        NewFileScanner scaner = new NewFileScanner();
         FileDataStorage fileDataStorage = new FileDataStorage();
         DocumentProcessor aggregator = new DocumentProcessor();
         FileSetInspector inspector = new FileSetInspector();

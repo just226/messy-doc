@@ -45,7 +45,7 @@ public class AlPhaDogTask implements Runnable {
         workerProfile.setStatus("working");
         eventPublisher.publishEvent(new MessyDocEvent("update"));
 
-        FileScaner scaner = new FileScaner();
+        FileScanner scaner = new FileScanner();
         FileDataStorage fileDataStorage = new FileDataStorage();
         DocumentProcessor aggregator = new DocumentProcessor();
         FileSetInspector inspector = new FileSetInspector();
