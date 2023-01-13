@@ -32,7 +32,6 @@ public class DocContentProcessor {
     WorkerEntitySingleton workerProfile;
     @Autowired
     ElasticsearchTemplate elasticsearchTemplate;
-
     @Autowired
     ElasticsearchClient elasticsearchClient;
     /**

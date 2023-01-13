@@ -15,11 +15,8 @@ public class WordFileContentReader implements FileContentReader {
 
     @Override
     public String read(String path) {
-        try{
-            POITextExtractor extractor = ExtractorFactory.createExtractor(new File(path));
-            String s = extractor.getText();
-            extractor.close();
-            return s;
+        try(POITextExtractor extractor = ExtractorFactory.createExtractor(new File(path))){
+            return extractor.getText();
         }catch (Exception e){
             return "null";
         }

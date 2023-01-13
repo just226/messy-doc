@@ -15,11 +15,8 @@ public class PDFFileContentReader implements FileContentReader {
 
     @Override
     public String read(String path) {
-        try{
-            PDDocument document = PDDocument.load(new File(path));
-            String s = new PDFTextStripper().getText(document);
-            document.close();
-            return s;
+        try(PDDocument document = PDDocument.load(new File(path))){
+            return new PDFTextStripper().getText(document);
         }catch (Exception e){
             return "null";
         }

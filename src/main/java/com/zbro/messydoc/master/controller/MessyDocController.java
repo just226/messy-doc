@@ -87,7 +87,7 @@ public class MessyDocController {
                 })
                 .collect(Collectors.toList()));
 
-        model.addAttribute("NameList",fileNameList.stream().map(NewDocumentEntity::getFilePath).collect(Collectors.toList()));
+        model.addAttribute("NameList",fileNameList);
         model.addAttribute("highLightKey", highLightKeys.get(0));
         return "index";
     }

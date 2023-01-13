@@ -74,7 +74,9 @@ public class DeltaDogTask implements Runnable {
         }
 
         //invalid the old files version
-        allFiles.values().forEach(e-> e.setVersion(0));
+        //it will cause trouble when we scan a small set of the document, the file not scanned will be invalid
+        //so this feature has to be canceled for now
+//        allFiles.values().forEach(e-> e.setVersion(0));
 
         //2. scan the paths, initiate the new files
         for (String path : sniffPaths.toArray(new String[0])) {
@@ -93,9 +95,10 @@ public class DeltaDogTask implements Runnable {
 
         docContentProcessor.updatePathToEs(allFiles);
 
-        docContentProcessor.updateInvalidFilesToEs(allFiles);
-
-        docContentProcessor.removeInvalidFilesFromMap(allFiles);
+//        canceled feature
+//        docContentProcessor.updateInvalidFilesToEs(allFiles);
+//        canceled feature
+//        docContentProcessor.removeInvalidFilesFromMap(allFiles);
 
         //4. save new files to path and delete old dbfiles
         String dbFile = fileDataStorage.saveToDbFile(allFiles);

@@ -97,14 +97,14 @@
         <div class="container-fluid pt-2" th:if="${NameList.size > 0}">
             <h3 class="display-6 p-5">KeyWord in Title</h3>
             <div class="p-5 pb-1 pt-1" th:each="item:${NameList}">
-                <p th:text="${item}"></p>
+                <a target="_blank" th:href="@{'/content/' + ${item.getId}(key=${highLightKey})}" th:text="${item.getFileName}"></a>
             </div>
         </div>
 
         <div class="container-fluid pt-2" th:if="${ContentList.size > 0}">
             <h3 class="display-6 p-5">KeyWord in Content</h3>
             <div class="p-5 pb-1 pt-1" th:each="item:${ContentList}">
-                <a th:href="@{'/content/' + ${item.getId}(key=${highLightKey})}" th:text="${item.getFilePath}"></a>
+                <a target="_blank" th:href="@{'/content/' + ${item.getId}(key=${highLightKey})}" th:text="${item.getFilePath}"></a>
                 <p th:text="${item.getFileContent}"></p>
             </div>
 
