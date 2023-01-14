@@ -28,25 +28,25 @@ public class WorkerInitializer implements ApplicationRunner {
         boolean hasAdvertisedListener = true;
         boolean hasMasterHost = true;
         String dogName;
-        if(args.getOptionValues("dogname") != null){
-            dogName = args.getOptionValues("dogname").get(0);
+        if(args.getOptionValues("workerName") != null){
+            dogName = args.getOptionValues("workerName").get(0);
         }else {
             dogName = InetAddress.getLocalHost().getHostName();
-            log.info("no dogname found, use default hostname {}",dogName);
-            log.info("you can specify the worker name with --dogname=xxx");
+            log.info("no workerName found, use default hostname {}",dogName);
+            log.info("you can name this worker with --workerName=xxx");
         }
-        String advertisedlistener = "localhost";
+        String advertisedListener = "localhost";
         if(args.getOptionValues("mode").get(0).equals("unified")){
-            advertisedlistener = "localhost";
-        }else if(args.getOptionValues("advertisedlistener") != null){
-            advertisedlistener = args.getOptionValues("advertisedlistener").get(0);
+            advertisedListener = "localhost";
+        }else if(args.getOptionValues("advertisedListener") != null){
+            advertisedListener = args.getOptionValues("advertisedListener").get(0);
         }else {
-            log.error("you must specify the advertisedlistener with --advertisedlistener=xxx");
+            log.error("you must specify the advertisedListener with --advertisedListener=x.x.x.x");
             log.error("note that the listener is used by master, it must be a master reachable address or domain name");
             hasAdvertisedListener = false;
         }
         if(args.getOptionValues("masterHost") == null){
-            log.error("you must specify the masterHost with --masterHost=http://xxx:13399");
+            log.error("you must specify the masterHost with --masterHost=http://x.x.x.x:13399");
             hasMasterHost = false;
         }
         if(!hasAdvertisedListener || !hasMasterHost){
@@ -56,7 +56,7 @@ public class WorkerInitializer implements ApplicationRunner {
         workerProfile.setId(UUID.randomUUID().toString());
         workerProfile.setName(dogName);
 //        InetAddress address = InetAddress.getLocalHost();
-        workerProfile.setAdvertisedListener(advertisedlistener);
+        workerProfile.setAdvertisedListener(advertisedListener);
         workerProfile.setStatus("idle");
         workerProfile.setTtl(10);
         workerProfile.setPaths(new HashSet<>());
