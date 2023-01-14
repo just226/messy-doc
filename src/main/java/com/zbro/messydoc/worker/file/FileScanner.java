@@ -26,7 +26,7 @@ public class FileScanner {
             try {
                 Files.walkFileTree(path.toPath(), new SimpleFileVisitor<Path>() {
                     @Override
-                    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
                         DocTypeEnum type = DocTypeDetector.getTypeFromExtensionName(file);
                         String hash = "na";
                         if(type!=DocTypeEnum.unknown) hash = MD5Hash.digest(file);
