@@ -19,7 +19,7 @@ public class MessyDocApplication {
 				String mode = applicationArguments.getOptionValues("mode").get(0);
 				switch (mode) {
 					case "unified":
-						log.info("start master service with a worker");
+						log.info("start start unified mode with master and a worker");
 						SpringApplication.run(MessyDocMasterWithWorkerApplication.class, args);
 						break;
 					case "master":
@@ -35,9 +35,8 @@ public class MessyDocApplication {
 						break;
 				}
 			}else {
-				log.info("start default master service with a worker");
+				log.info("start default unified mode with master and a worker");
 				log.info("you can run one of the mode [unified|master|worker] with argument --mode=xxx");
-				// todo do something with the masterHost
 				SpringApplication.run(MessyDocMasterWithWorkerApplication.class, ArrayUtils.concat(args, new String[]{"--mode=unified","--masterHost=http://localhost:13399"}));
 			}
 		}catch (Exception e){

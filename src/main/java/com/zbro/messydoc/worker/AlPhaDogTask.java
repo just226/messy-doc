@@ -87,7 +87,8 @@ public class AlPhaDogTask implements Runnable {
             log.info("save db file to {}",dbFile);
             //4. find new files in newSet against the oldSet
             totalFileSet.addAll(inspector.getDifferentInNewSet(oldSet,newSet));
-            //todo 5.find deleted files and mark it in db
+            //5.find deleted files and mark it in db
+            // mark the deleted files with version
         }
         log.info("scan and compare files complete, {} files need to be processed", totalFileSet.size());
 
