@@ -56,7 +56,7 @@ public class DeltaDogTask implements Runnable {
         docContentProcessor.fileParserRegister(new PPTFileContentReader());
         docContentProcessor.fileParserRegister(new WordFileContentReader());
         docContentProcessor.fileParserRegister(new PDFFileContentReader());
-        log.info("scan and compare files begin");
+        log.info("let the dog out");
 
 
         //1. load all dbfile
@@ -70,7 +70,6 @@ public class DeltaDogTask implements Runnable {
                     });
         } catch (Exception e) {
             e.printStackTrace();
-            log.info("no dbfile in the default path");
         }
 
         //invalid the old files version
@@ -80,18 +79,19 @@ public class DeltaDogTask implements Runnable {
 
         //2. scan the paths, initiate the new files
         for (String path : sniffPaths.toArray(new String[0])) {
+            log.info("sniff the path: {} begin",path);
 
             long t1 = System.currentTimeMillis();
 
             scanner.scan(allFiles, path);
-            log.info("scan path {} complete, {} files found, cost: {}ms", path, allFiles.size(), System.currentTimeMillis() - t1);
+            log.info("sniff path {} complete, {} files found, cost: {}ms", path, allFiles.size(), System.currentTimeMillis() - t1);
 
         }
-        log.info("sniff content and persist to db begin");
+        log.info("read content and persist to db begin");
         long t3 = System.currentTimeMillis();
         //3. read and fill contents then persist to db
         docContentProcessor.readFileContentAndSaveToEs(allFiles);
-        log.info("sniff content and persist to db cost: {}ms", System.currentTimeMillis() - t3);
+        log.info("read content and persist to db cost: {}ms", System.currentTimeMillis() - t3);
 
         docContentProcessor.updatePathToEs(allFiles);
 
